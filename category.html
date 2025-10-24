@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子商务专升本四班</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-container">
+                <a href="index.html" class="logo">Elegant<span>Style</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="category.html?category=women" id="women-link">女装</a></li>
+                        <li><a href="category.html?category=men" id="men-link">男装</a></li>
+                        <li><a href="category.html?category=accessories" id="accessories-link">配饰</a></li>
+                        <li><a href="category.html?category=beauty" id="beauty-link">美妆</a></li>
+                    </ul>
+                </nav>
+                <div class="header-icons">
+                    <a href="#"><i class="fas fa-search"></i></a>
+                    <a href="#"><i class="fas fa-user"></i></a>
+                    <a href="#"><i class="fas fa-shopping-bag"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <section class="page-header">
+            <div class="container">
+                <h1 id="category-title">商品分类</h1>
+                <div class="breadcrumb" id="category-breadcrumb">
+                    <!-- 面包屑导航将通过JS动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="category-products">
+            <div class="container">
+                <div class="filter-bar">
+                    <div class="filter-options">
+                        <select id="sort-select">
+                            <option value="default">按价格排序</option>
+                            <option value="price-low">价格从低到高</option>
+                            <option value="price-high">价格从高到低</option>
+                        </select>
+                        <select id="brand-select">
+                            <option value="all">按品牌筛选</option>
+                            <option value="brand-a">品牌A</option>
+                            <option value="brand-b">品牌B</option>
+                        </select>
+                        <select id="size-select">
+                            <option value="all">按尺寸筛选</option>
+                            <option value="xs">XS</option>
+                            <option value="s">S</option>
+                            <option value="m">M</option>
+                            <option value="l">L</option>
+                            <option value="xl">XL</option>
+                        </select>
+                    </div>
+                    <div class="view-options">
+                        <button class="active" id="grid-view"><i class="fas fa-th"></i></button>
+                        <button id="list-view"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+                
+                <div class="product-grid" id="category-products-grid">
+                    <!-- 分类商品内容将通过JS动态加载 -->
+                </div>
+                
+                <div class="pagination" id="category-pagination">
+                    <!-- 分页导航将通过JS动态加载 -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul>
+                        <li><a href="#">品牌故事</a></li>
+                        <li><a href="#">团队介绍</a></li>
+                        <li><a href="#">招聘信息</a></li>
+                        <li><a href="#">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>客户服务</h3>
+                    <ul>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">配送信息</a></li>
+                        <li><a href="#">退换政策</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>购物指南</h3>
+                    <ul>
+                        <li><a href="#">尺码指南</a></li>
+                        <li><a href="#">保养说明</a></li>
+                        <li><a href="#">购物流程</a></li>
+                        <li><a href="#">会员制度</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>关注我们</h3>
+                    <p>订阅我们的新闻通讯，获取最新优惠和时尚资讯</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+              <p>&copy; 电子商务专升本四班.</p>
+            </div>
+        </div>
+    </footer>
+<script src="./data.js"></script>
+    <script>
+        const data = websiteData;
+        // 获取URL参数
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 加载数据并渲染栏目页
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySlug = getUrlParameter('category') || 'women';
+            
+          
+                    renderCategoryPage(data, categorySlug);
+                    setupEventListeners(data, categorySlug);
+                })
+               
+
+        // 渲染栏目页
+        function renderCategoryPage(data, categorySlug) {
+            // 获取分类信息
+            const category = data.categories.find(c => c.slug === categorySlug);
+            if (!category) return;
+            
+            // 更新页面标题
+            document.getElementById('category-title').textContent = `${category.name}系列`;
+            
+            // 更新面包屑导航
+            const breadcrumb = document.getElementById('category-breadcrumb');
+            breadcrumb.innerHTML = `
+                <a href="index.html">首页</a>
+                <span>/</span>
+                <a href="category.html?category=${category.slug}">${category.name}</a>
+            `;
+            
+            // 激活当前分类导航
+            document.getElementById(`${category.slug}-link`).classList.add('active');
+            
+            // 渲染商品
+            renderCategoryProducts(data.products, category.id);
+        }
+
+        // 渲染分类商品
+        function renderCategoryProducts(products, categoryId) {
+            const productsGrid = document.getElementById('category-products-grid');
+            productsGrid.innerHTML = '';
+            
+            const categoryProducts = products.filter(product => product.categoryId === categoryId);
+            
+            categoryProducts.forEach(product => {
+                const productCard = document.createElement('a');
+                productCard.href = `detail.html?product=${product.id}`;
+                productCard.className = 'product-card';
+                
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.images[0]}" alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-price">¥${product.price}</p>
+                    </div>
+                `;
+                
+                productsGrid.appendChild(productCard);
+            });
+            
+            // 更新分页
+            const pagination = document.getElementById('category-pagination');
+            pagination.innerHTML = `
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#"><i class="fas fa-chevron-right"></i></a>
+            `;
+        }
+
+        // 设置事件监听器
+        function setupEventListeners(data, categorySlug) {
+            // 视图切换事件
+            document.getElementById('grid-view').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('list-view').classList.remove('active');
+                document.getElementById('category-products-grid').classList.remove('list-view');
+            });
+            
+            document.getElementById('list-view').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('grid-view').classList.remove('active');
+                document.getElementById('category-products-grid').classList.add('list-view');
+            });
+            
+            // 筛选事件
+            document.getElementById('sort-select').addEventListener('change', function() {
+                // 这里可以添加排序逻辑
+                console.log('排序选项改变:', this.value);
+            });
+            
+            document.getElementById('brand-select').addEventListener('change', function() {
+                // 这里可以添加品牌筛选逻辑
+                console.log('品牌筛选改变:', this.value);
+            });
+            
+            document.getElementById('size-select').addEventListener('change', function() {
+                // 这里可以添加尺寸筛选逻辑
+                console.log('尺寸筛选改变:', this.value);
+            });
+        }
+    </script>
+</body>
+</html>
